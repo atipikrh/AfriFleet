@@ -1,0 +1,109 @@
+# Guide de Déploiement AfriFleet sur Vercel
+
+## Configuration PWA
+
+L'application est maintenant configurée comme Progressive Web App (PWA) avec :
+- ✅ Service Worker automatique
+- ✅ Cache intelligent (NetworkFirst pour API, CacheFirst pour assets)
+- ✅ Support hors ligne
+- ✅ Mise à jour automatique
+- ✅ Installation sur appareils mobiles
+
+## Déploiement sur Vercel
+
+### Option 1 : Via l'interface web Vercel (Recommandé)
+
+1. **Connectez-vous à Vercel**
+   - Allez sur [vercel.com](https://vercel.com)
+   - Connectez-vous avec votre compte GitHub
+
+2. **Importez le projet**
+   - Cliquez sur "Add New Project"
+   - Sélectionnez le dépôt `AfriFleet` depuis GitHub
+   - Vercel détectera automatiquement la configuration
+
+3. **Configuration du projet**
+   - **Framework Preset**: Vite
+   - **Root Directory**: `./` (racine)
+   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Output Directory**: `frontend/dist`
+   - **Install Command**: `cd frontend && npm install`
+
+4. **Variables d'environnement** (si nécessaire)
+   - Ajoutez vos variables d'environnement dans les paramètres du projet
+   - Exemple : `VITE_API_URL`, etc.
+
+5. **Déployez**
+   - Cliquez sur "Deploy"
+   - Attendez la fin du déploiement (2-3 minutes)
+
+### Option 2 : Via la CLI Vercel
+
+```bash
+# Installer la CLI Vercel globalement
+npm install -g vercel
+
+# Depuis la racine du projet
+cd C:\Users\Admin\Documents\GitHub\AfriFleet
+
+# Déployer
+vercel
+
+# Suivre les instructions interactives
+# - Link to existing project? No (première fois) ou Yes
+# - Project name: afrifleet
+# - Directory: ./
+# - Override settings? No
+```
+
+### Configuration automatique
+
+Le fichier `vercel.json` est déjà configuré avec :
+- Build command pour le frontend
+- Output directory pointant vers `frontend/dist`
+- Rewrites pour l'API (si nécessaire)
+
+## Accès à l'application
+
+Une fois déployé, Vercel vous fournira :
+- **URL de production** : `https://afrifleet.vercel.app` (ou votre domaine personnalisé)
+- **URL de prévisualisation** : Pour chaque commit/pull request
+
+## Tester le PWA
+
+1. **Ouvrir l'application** sur votre ordinateur :
+   - Allez sur l'URL fournie par Vercel
+   - Ouvrez les DevTools (F12)
+   - Onglet "Application" > "Service Workers" pour vérifier l'enregistrement
+
+2. **Installer l'application** :
+   - Sur Chrome/Edge : Cliquez sur l'icône d'installation dans la barre d'adresse
+   - Sur mobile : Menu > "Ajouter à l'écran d'accueil"
+
+3. **Tester le mode hors ligne** :
+   - Installez l'application
+   - Activez le mode avion
+   - L'application devrait toujours fonctionner avec les données en cache
+
+## Mise à jour automatique
+
+Le PWA est configuré avec `autoUpdate`, donc :
+- Les mises à jour sont détectées automatiquement
+- Un prompt s'affiche pour informer l'utilisateur
+- L'utilisateur peut choisir de mettre à jour immédiatement ou plus tard
+
+## Vérification post-déploiement
+
+✅ Service Worker enregistré
+✅ Manifest.json accessible
+✅ Icônes PWA chargées
+✅ Cache fonctionnel
+✅ Mode hors ligne opérationnel
+
+## Support
+
+Pour toute question ou problème :
+- Vérifiez les logs Vercel dans le dashboard
+- Consultez la console du navigateur
+- Vérifiez que le Service Worker est actif dans DevTools
+
