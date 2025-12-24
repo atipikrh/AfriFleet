@@ -1,0 +1,23 @@
+[
+  {
+    "id": "EXP-001",
+    "vehicle_id": "AF-234",
+    "type": "CARBURANT",
+    "montant": 50000,
+    "date": "2023-11-20",
+    "description": "Plein carburant",
+    "kilometrage": 245500,
+    "quantite_litres": 50,
+    "prix_unitaire": 1000
+  },
+  {
+    "id": "EXP-002",
+    "vehicle_id": "AF-234",
+    "type": "MAINTENANCE",
+    "montant": 150000,
+    "date": "2023-11-15",
+    "description": "Vidange et révision",
+    "kilometrage": 245000
+  }
+]
+

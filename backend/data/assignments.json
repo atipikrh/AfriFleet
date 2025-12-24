@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ASS-001",
+    "vehicle_id": "AF-234",
+    "driver_id": "DRV-001",
+    "date_debut": "2023-01-15",
+    "date_fin": null,
+    "statut": "ACTIF",
+    "mode_double_equipage": false,
+    "conducteur_secondaire_id": null
+  },
+  {
+    "id": "ASS-002",
+    "vehicle_id": "AF-235",
+    "driver_id": "DRV-002",
+    "date_debut": "2023-02-01",
+    "date_fin": null,
+    "statut": "ACTIF",
+    "mode_double_equipage": false,
+    "conducteur_secondaire_id": null
+  }
+]
+

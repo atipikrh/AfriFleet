@@ -1,0 +1,22 @@
+[
+  {
+    "id": "CHK-001",
+    "vehicle_id": "AF-234",
+    "driver_id": "DRV-001",
+    "date": "2023-11-26",
+    "items": [
+      { "id": "1", "text": "Pression des pneus", "checked": true, "anomalie_critique": false },
+      { "id": "2", "text": "Niveau d'huile moteur", "checked": true, "anomalie_critique": false },
+      { "id": "3", "text": "Liquide de refroidissement", "checked": false, "anomalie_critique": false },
+      { "id": "4", "text": "Feux avant et arrière", "checked": true, "anomalie_critique": false },
+      { "id": "5", "text": "Freins et frein à main", "checked": false, "anomalie_critique": true },
+      { "id": "6", "text": "Ceintures de sécurité", "checked": true, "anomalie_critique": false },
+      { "id": "7", "text": "Extincteur présent", "checked": true, "anomalie_critique": false },
+      { "id": "8", "text": "Trousse de secours", "checked": false, "anomalie_critique": false }
+    ],
+    "anomalies": ["Freins et frein à main"],
+    "photo_url": null,
+    "signature": null
+  }
+]
+
