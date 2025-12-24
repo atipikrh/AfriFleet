@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Header } from './components/layout/Header';
 import { Sidebar } from './components/layout/Sidebar';
 import { BottomNav } from './components/layout/BottomNav';
+import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import { Login } from './pages/Login';
 import { ManagerDashboard } from './pages/ManagerDashboard';
 import { VehicleDetail } from './pages/VehicleDetail';
@@ -75,6 +76,7 @@ function App() {
           <BottomNav currentScreen={currentScreen} onScreenChange={handleScreenChange} />
         </div>
       </div>
+      <PWAUpdatePrompt />
     </div>
   );
 }
