@@ -10,13 +10,21 @@
     "dev:frontend-only": "cd frontend && npm run dev",
     "dev:backend-only": "cd backend && npm run dev",
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "build": "cd frontend && npm run build",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
-    "generate:design-tokens": "cd frontend && npm run generate:design-tokens"
+    "generate:design-tokens": "cd frontend && npm run generate:design-tokens",
+    "analyze:deps": "madge --image deps.svg --extensions ts,tsx,js,jsx frontend/src backend/src",
+    "visualize:architecture": "dependency-cruiser --output-type dot frontend/src backend/src | dot -T svg > architecture.svg",
+    "check:bundle": "cd frontend && npm run build && npx vite-bundle-visualizer"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "madge": "^7.0.0",
+    "dependency-cruiser": "^16.3.4",
+    "mermaid": "^10.9.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "prettier": "^3.3.3"
   }
 }
 
