@@ -1,0 +1,33 @@
+[
+  {
+    "id": "USR-001",
+    "identifier": "manager01",
+    "password": "manager123",
+    "role": "manager",
+    "nom": "Amadou Diallo",
+    "email": "amadou.diallo@afrifleet.com",
+    "telephone": "+221 77 111 1111",
+    "actif": true
+  },
+  {
+    "id": "USR-002",
+    "identifier": "driver01",
+    "password": "driver123",
+    "role": "driver",
+    "nom": "Moussa Diallo",
+    "email": "moussa.diallo@afrifleet.com",
+    "telephone": "+221 77 123 4567",
+    "actif": true
+  },
+  {
+    "id": "USR-003",
+    "identifier": "workshop01",
+    "password": "workshop123",
+    "role": "workshop",
+    "nom": "Ibrahim Traoré",
+    "email": "ibrahim.traore@afrifleet.com",
+    "telephone": "+221 77 345 6789",
+    "actif": true
+  }
+]
+

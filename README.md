@@ -21,20 +21,34 @@ npm run install:all
 ## 🚀 Démarrage
 
 ```bash
-# Démarrer le frontend et le backend simultanément
+# Démarrer le frontend et le backend simultanément avec rechargement automatique
 npm run dev
 ```
 
-- **Frontend**: http://localhost:3000
-- **Backend**: http://localhost:3001
+- **Frontend**: http://localhost:3000 (Hot-reload activé avec Vite)
+- **Backend**: http://localhost:3001 (Hot-reload activé avec tsx watch)
+
+> 💡 **Rechargement automatique** : Les modifications dans le code sont automatiquement détectées et rechargées sans redémarrer les serveurs.
 
 ## 📝 Scripts Disponibles
 
-- `npm run dev` - Démarrer frontend + backend en mode développement
-- `npm run dev:frontend` - Démarrer uniquement le frontend
-- `npm run dev:backend` - Démarrer uniquement le backend
-- `npm run build` - Construire le frontend pour la production
-- `npm run install:all` - Installer toutes les dépendances
+### Développement
+- `npm run dev` - Démarrer frontend + backend simultanément (rechargement automatique)
+- `npm run dev:frontend` - Démarrer uniquement le frontend (port 3000)
+- `npm run dev:backend` - Démarrer uniquement le backend (port 3001)
+- `npm run dev:frontend-only` - Alias pour démarrer uniquement le frontend
+- `npm run dev:backend-only` - Alias pour démarrer uniquement le backend
+
+### Build
+- `npm run build` - Construire le frontend et le backend pour la production
+- `npm run build:frontend` - Construire uniquement le frontend
+- `npm run build:backend` - Construire uniquement le backend
+
+### Design System
+- `npm run generate:design-tokens` - Générer les tokens CSS depuis le design system
+
+### Installation
+- `npm run install:all` - Installer toutes les dépendances (racine + backend + frontend)
 
 ## 🎯 Technologies
 

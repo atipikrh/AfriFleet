@@ -1,0 +1,53 @@
+# Configuration Cursor pour AfriFleet
+
+## Structure du projet
+- **Backend**: Express + TypeScript dans `backend/`
+- **Frontend**: React + Vite + TypeScript dans `frontend/`
+- **Design System**: `frontend/design-system/` - Charte graphique centralisée
+- **Standalone**: Version HTML/JS vanilla dans `frontend/standalone/`
+
+## Scripts de développement
+
+### Depuis la racine (recommandé)
+- `npm run dev` : Démarrer frontend + backend simultanément avec logs colorés
+- `npm run dev:verbose` : Mode verbose avec logs détaillés
+- `npm run dev:frontend` : Démarrer uniquement le frontend
+- `npm run dev:backend` : Démarrer uniquement le backend
+
+### Depuis les sous-dossiers
+- `cd frontend && npm run dev` : Démarrer le frontend
+- `cd backend && npm run dev` : Démarrer le backend
+
+### Design System
+- `npm run generate:design-tokens` : Générer les tokens CSS depuis le design system
+
+## Ports
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
+- **Health Check**: http://localhost:3001/api/health
+
+## Design System
+Toujours utiliser le design system depuis `frontend/design-system/` pour :
+- Couleurs : `import { colors } from './design-system'`
+- Gradients : `import { gradients } from './design-system'`
+- Hooks React : `import { useColor, useGradient } from './design-system/hooks'`
+- Utilitaires : `import { getGlassStyle } from './design-system/utils'`
+
+## Conventions de code
+- Code simple et minimaliste pour une meilleure scalabilité
+- Toujours répondre et écrire en français
+- Utiliser TypeScript pour le typage
+- Suivre les patterns établis dans les composants existants
+
+## Architecture
+- **Backend**: API REST avec Express
+- **Frontend**: React avec hooks et context API
+- **Styling**: Tailwind CSS + Design System centralisé
+- **Build**: Vite pour le frontend, TypeScript compiler pour le backend
+
+## Workflow recommandé
+1. Modifier les valeurs dans `frontend/design-system/`
+2. Exécuter `npm run generate:design-tokens` pour synchroniser avec CSS
+3. Utiliser les hooks et utilitaires du design system dans les composants
+4. Tester avec `npm run dev` depuis la racine
+

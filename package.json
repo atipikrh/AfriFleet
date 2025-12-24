@@ -1,0 +1,22 @@
+{
+  "name": "afrifleet",
+  "version": "1.0.0",
+  "description": "Application de gestion de flotte africaine",
+  "scripts": {
+    "dev": "concurrently -n \"🔴 BACKEND,🔵 FRONTEND\" -c \"red.bold,blue.bold\" --prefix-colors \"red,blue\" --prefix \"[{name}]\" --timestamp \"HH:mm:ss\" --kill-others-on-fail --handle-input \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:verbose": "concurrently -n \"🔴 BACKEND,🔵 FRONTEND\" -c \"red.bold,blue.bold\" --raw --prefix \"[{name}]\" --timestamp \"HH:mm:ss\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:frontend-only": "cd frontend && npm run dev",
+    "dev:backend-only": "cd backend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "generate:design-tokens": "cd frontend && npm run generate:design-tokens"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+

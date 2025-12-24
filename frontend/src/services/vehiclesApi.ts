@@ -1,6 +1,6 @@
 import { api } from './api';
 import { Driver } from './driversApi';
-import { Assignment } from './assignmentsApi';
+import { AssignmentWithRelations } from './assignmentsApi';
 import { Expense } from './expensesApi';
 import { Checklist } from './checklistsApi';
 
@@ -23,7 +23,7 @@ export interface Vehicle {
 
 export interface VehicleWithRelations extends Vehicle {
   conducteur_actif?: Driver | null;
-  assignments?: Assignment[];
+  assignments?: AssignmentWithRelations[];
   expenses?: Expense[];
   checklists?: Checklist[];
 }

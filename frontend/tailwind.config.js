@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+// Note: Les valeurs ci-dessous sont synchronisées avec frontend/design-system/
+// Source: design-system/colors.ts, design-system/typography.ts, design-system/spacing.ts
+
 export default {
   content: [
     "./index.html",
@@ -6,6 +9,7 @@ export default {
   ],
   theme: {
     extend: {
+      // Couleurs - Source: design-system/colors.ts
       colors: {
         primary: {
           DEFAULT: '#6366f1',
@@ -29,6 +33,7 @@ export default {
           100: '#ffedd5',
           500: '#f97316',
           600: '#ea580c',
+          700: '#c2410c',
         },
         warning: '#f59e0b',
         danger: '#ef4444',
@@ -36,9 +41,11 @@ export default {
         light: '#f8fafc',
         dark: '#1e293b',
       },
+      // Typographie - Source: design-system/typography.ts
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      // Espacements - Source: design-system/spacing.ts
       spacing: {
         '18': '4.5rem',
         '88': '22rem',

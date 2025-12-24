@@ -5,6 +5,7 @@ import { Driver } from '../models/Driver.js';
 import { Assignment } from '../models/Assignment.js';
 import { Checklist } from '../models/Checklist.js';
 import { Expense } from '../models/Expense.js';
+import { User } from '../models/User.js';
 import { VehicleWithRelations } from '../models/VehicleWithRelations.js';
 import { AssignmentWithRelations } from '../models/AssignmentWithRelations.js';
 import { ExpenseWithRelations } from '../models/ExpenseWithRelations.js';
@@ -302,6 +303,29 @@ export class DataService {
   static getChecklistsByVehicleWithRelations(vehicleId: string): ChecklistWithRelations[] {
     const checklists = this.getChecklistsByVehicle(vehicleId);
     return checklists.map(c => this.getChecklistWithRelations(c.id)!).filter(Boolean);
+  }
+
+  // Users
+  static getUsers(): User[] {
+    return readJsonFile<User>('users.json');
+  }
+
+  static getUserById(id: string): User | undefined {
+    const users = this.getUsers();
+    return users.find(u => u.id === id);
+  }
+
+  static getUserByIdentifier(identifier: string): User | undefined {
+    const users = this.getUsers();
+    return users.find(u => u.identifier === identifier && u.actif);
+  }
+
+  static authenticateUser(identifier: string, password: string): User | null {
+    const user = this.getUserByIdentifier(identifier);
+    if (!user || user.password !== password) {
+      return null;
+    }
+    return user;
   }
 }
 

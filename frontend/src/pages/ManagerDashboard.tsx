@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { GlassCard } from '../components/ui/GlassCard';
 import { StatCard } from '../components/ui/StatCard';
 import { QuickAction } from '../components/ui/QuickAction';
-import { StatusDot } from '../components/ui/StatusDot';
 import { useApp } from '../context/AppContext';
 import { VehicleCard } from '../components/VehicleCard';
 
@@ -54,10 +52,10 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-          <StatCard value={stats.total} label="Véhicules actifs" gradient="from-indigo-600 to-purple-600" />
-          <StatCard value={stats.actifs} label="En service" gradient="from-green-600 to-emerald-600" />
-          <StatCard value={stats.maintenance} label="En maintenance" gradient="from-amber-600 to-orange-600" />
-          <StatCard value={stats.horsService} label="Hors service" gradient="from-red-600 to-rose-600" />
+          <StatCard value={stats.total} label="Véhicules actifs" variant="primary" />
+          <StatCard value={stats.actifs} label="En service" variant="success" />
+          <StatCard value={stats.maintenance} label="En maintenance" variant="warning" />
+          <StatCard value={stats.horsService} label="Hors service" variant="danger" />
         </div>
 
         <div className="mb-6 sm:mb-8">
