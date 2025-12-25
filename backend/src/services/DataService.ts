@@ -327,5 +327,30 @@ export class DataService {
     }
     return user;
   }
+
+  static createUser(user: User): User {
+    const users = this.getUsers();
+    users.push(user);
+    writeJsonFile('users.json', users);
+    return user;
+  }
+
+  static updateUser(id: string, updates: Partial<User>): User | null {
+    const users = this.getUsers();
+    const index = users.findIndex(u => u.id === id);
+    if (index === -1) return null;
+    users[index] = { ...users[index], ...updates };
+    writeJsonFile('users.json', users);
+    return users[index];
+  }
+
+  static deleteUser(id: string): boolean {
+    const users = this.getUsers();
+    const index = users.findIndex(u => u.id === id);
+    if (index === -1) return false;
+    users.splice(index, 1);
+    writeJsonFile('users.json', users);
+    return true;
+  }
 }
 

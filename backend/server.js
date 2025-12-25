@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import compression from 'compression';
 import vehiclesRouter from './src/routes/vehicles.js';
 import driversRouter from './src/routes/drivers.js';
 import assignmentsRouter from './src/routes/assignments.js';
@@ -8,25 +9,28 @@ import expensesRouter from './src/routes/expenses.js';
 import aiRouter from './src/routes/ai.js';
 import authRouter from './src/routes/auth.js';
 import { logger } from './src/utils/logger.js';
+import { securityMiddleware, generalRateLimit, authRateLimit } from './src/config/security.js';
+import { httpLogger } from './src/config/logging.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Sécurité et compression
+app.use(securityMiddleware);
+app.use(compression());
+
+// CORS et parsing JSON
 app.use(cors());
 app.use(express.json());
 
-// Middleware de logging pour les requêtes
-app.use((req, res, next) => {
-  const start = Date.now();
-  res.on('finish', () => {
-    const duration = Date.now() - start;
-    logger.request(req.method, req.path, res.statusCode);
-    if (duration > 1000) {
-      logger.warn(`Requête lente: ${duration}ms pour ${req.method} ${req.path}`);
-    }
-  });
-  next();
-});
+// Logging HTTP avec Morgan
+app.use(httpLogger);
+
+// Rate limiting général
+app.use('/api', generalRateLimit);
+
+// Rate limiting pour l'authentification
+app.use('/api/auth', authRateLimit);
 
 // Routes de santé
 app.get('/api/health', (req, res) => {
