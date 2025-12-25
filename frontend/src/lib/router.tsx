@@ -4,7 +4,7 @@ import { AppLayout } from '../components/layout/AppLayout';
 
 const Login = lazy(() => import('../pages/Login').then(module => ({ default: module.Login })));
 const ManagerDashboard = lazy(() => import('../pages/ManagerDashboard').then(module => ({ default: module.ManagerDashboard })));
-const VehicleDetail = lazy(() => import('../pages/VehicleDetail').then(module => ({ default: module.VehicleDetail })));
+const VehicleDetail = lazy(() => import('../pages/VehicleDetail'));
 const SafetyChecklist = lazy(() => import('../pages/SafetyChecklist').then(module => ({ default: module.SafetyChecklist })));
 const FuelEntry = lazy(() => import('../pages/FuelEntry').then(module => ({ default: module.FuelEntry })));
 const AIReports = lazy(() => import('../pages/AIReports').then(module => ({ default: module.AIReports })));
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
         path: 'vehicles/:id',
         element: (
           <Suspense fallback={<LoadingFallback />}>
-            <VehicleDetail onBack={() => {}} />
+            <VehicleDetail />
           </Suspense>
         ),
       },
