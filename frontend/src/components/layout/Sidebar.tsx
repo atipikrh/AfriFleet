@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { slideIn } from '../lib/animations';
+import { slideIn } from '@/lib/animations';
 
 interface SidebarProps {
   currentScreen: string;
   onScreenChange: (screen: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentScreen, onScreenChange }) => {
+export const Sidebar: React.FC<SidebarProps> = () => {
   const location = useLocation();
   
   const navItems = [

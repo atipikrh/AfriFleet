@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { PWAUpdatePrompt } from '../PWAUpdatePrompt';
-import { pageTransition } from '../lib/animations';
+import { pageTransition } from '@/lib/animations';
 
 export const AppLayout = () => {
   const location = useLocation();

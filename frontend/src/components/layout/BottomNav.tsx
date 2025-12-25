@@ -6,7 +6,7 @@ interface BottomNavProps {
   onScreenChange: (screen: string) => void;
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onScreenChange }) => {
+export const BottomNav: React.FC<BottomNavProps> = () => {
   const location = useLocation();
   
   const navItems = [

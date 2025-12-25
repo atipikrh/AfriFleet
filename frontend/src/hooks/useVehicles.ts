@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { vehiclesApi, Vehicle, VehicleWithRelations } from '../services/vehiclesApi';
+import { vehiclesApi, Vehicle } from '../services/vehiclesApi';
 
 export const useVehicles = (withRelations = false) => {
   return useQuery({
