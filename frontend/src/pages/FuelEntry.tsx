@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GlassCard } from '../components/ui/GlassCard';
 import { GradientButton } from '../components/ui/GradientButton';
+import { Select, SelectItem } from '../components/ui/radix/Select';
 import { useApp } from '../context/AppContext';
 import { expensesApi } from '../services/expensesApi';
 
@@ -61,19 +62,17 @@ export const FuelEntry: React.FC<FuelEntryProps> = ({ onBack }) => {
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Véhicule</label>
-            <select
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            <Select
               value={vehicleId}
-              onChange={(e) => setVehicleId(e.target.value)}
-              required
+              onValueChange={setVehicleId}
+              placeholder="Sélectionnez un véhicule"
             >
-              <option value="">Sélectionnez un véhicule</option>
               {vehicles.map((v) => (
-                <option key={v.id} value={v.id}>
+                <SelectItem key={v.id} value={v.id}>
                   {v.marque} {v.modele} (#{v.id})
-                </option>
+                </SelectItem>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>

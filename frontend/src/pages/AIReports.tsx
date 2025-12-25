@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { GlassCard } from '../components/ui/GlassCard';
 import { GradientButton } from '../components/ui/GradientButton';
+import { VehicleStatsChart } from '../components/charts/VehicleStatsChart';
+import { ComplianceChart } from '../components/charts/ComplianceChart';
+import { ExpenseChart } from '../components/charts/ExpenseChart';
+import { useVehicles } from '../hooks/useVehicles';
 import { aiApi, FleetReport } from '../services/aiApi';
 
 interface AIReportsProps {
@@ -11,6 +15,7 @@ export const AIReports: React.FC<AIReportsProps> = ({ onBack }) => {
   const [report, setReport] = useState<FleetReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: vehicles = [] } = useVehicles();
 
   useEffect(() => {
     const loadReport = async () => {
@@ -26,6 +31,31 @@ export const AIReports: React.FC<AIReportsProps> = ({ onBack }) => {
     };
     loadReport();
   }, []);
+
+  const statsData = [
+    {
+      name: 'Flotte',
+      actifs: vehicles.filter(v => v.statut === 'ACTIF').length,
+      maintenance: vehicles.filter(v => v.statut === 'EN_MAINTENANCE').length,
+      horsService: vehicles.filter(v => v.statut === 'HORS_SERVICE' || v.statut === 'IMMOBILISÉ').length,
+    },
+  ];
+
+  const complianceData = report
+    ? [
+        { name: 'Vert', value: report.complianceScore.green },
+        { name: 'Orange', value: report.complianceScore.orange },
+        { name: 'Rouge', value: report.complianceScore.red },
+      ]
+    : [];
+
+  const expenseData = [
+    { date: 'Jan', montant: 500000 },
+    { date: 'Fév', montant: 750000 },
+    { date: 'Mar', montant: 600000 },
+    { date: 'Avr', montant: 800000 },
+    { date: 'Mai', montant: 700000 },
+  ];
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-4 sm:mb-6">
@@ -52,29 +82,24 @@ export const AIReports: React.FC<AIReportsProps> = ({ onBack }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-                <div className="flex items-start mb-3">
-                  <i className="fas fa-chart-line text-green-600 mt-1 mr-3 text-xl sm:text-2xl"></i>
-                  <div>
-                    <h3 className="font-semibold text-green-800 text-sm sm:text-base mb-1">Score de conformité</h3>
-                    <p className="text-xs sm:text-sm text-green-700">
-                      Vert: {report.complianceScore.green} • Orange: {report.complianceScore.orange} • Rouge: {report.complianceScore.red}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <GlassCard className="p-4 sm:p-6">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base mb-4">Statistiques des véhicules</h3>
+                <VehicleStatsChart data={statsData} />
+              </GlassCard>
 
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-                <div className="flex items-start mb-3">
-                  <i className="fas fa-truck text-purple-600 mt-1 mr-3 text-xl sm:text-2xl"></i>
-                  <div>
-                    <h3 className="font-semibold text-purple-800 text-sm sm:text-base mb-1">Statut véhicules</h3>
-                    <p className="text-xs sm:text-sm text-purple-700">
-                      Actifs: {report.activeVehicles} • Maintenance: {report.vehiclesInMaintenance} • Immobilisés: {report.immobilizedVehicles}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <GlassCard className="p-4 sm:p-6">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base mb-4">Score de conformité</h3>
+                {complianceData.length > 0 ? (
+                  <ComplianceChart data={complianceData} />
+                ) : (
+                  <div className="text-center text-gray-500 py-8">Données non disponibles</div>
+                )}
+              </GlassCard>
+
+              <GlassCard className="p-4 sm:p-6 lg:col-span-2">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base mb-4">Évolution des dépenses</h3>
+                <ExpenseChart data={expenseData} />
+              </GlassCard>
 
               {report.recommendations.length > 0 && (
                 <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:col-span-2">

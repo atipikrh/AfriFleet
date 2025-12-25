@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { StatCard } from '../components/ui/StatCard';
 import { QuickAction } from '../components/ui/QuickAction';
+import { Dialog } from '../components/ui/radix/Dialog';
+import { GradientButton } from '../components/ui/GradientButton';
 import { useApp } from '../context/AppContext';
 import { VehicleCard } from '../components/VehicleCard';
+import { fadeIn, staggerContainer } from '../lib/animations';
 
 interface ManagerDashboardProps {
   onScreenChange: (screen: string) => void;
@@ -16,6 +20,7 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
     maintenance: 0,
     horsService: 0,
   });
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     refreshVehicles();
@@ -30,9 +35,18 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
     });
   }, [vehicles]);
   return (
-    <div>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeIn}
+    >
       <div className="mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Tableau de bord</h2>
+        <motion.h2
+          className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6"
+          variants={fadeIn}
+        >
+          Tableau de bord
+        </motion.h2>
 
         <div className="alert-card rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
           <div className="flex items-center mb-3">
@@ -64,7 +78,7 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
             <QuickAction
               icon="fas fa-truck"
               label="Nouveau véhicule"
-              onClick={() => {}}
+              onClick={() => setDialogOpen(true)}
             />
             <QuickAction
               icon="fas fa-user-plus"
@@ -93,19 +107,52 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {loading ? (
             <div className="col-span-full text-center text-gray-500">Chargement...</div>
           ) : vehicles.length === 0 ? (
             <div className="col-span-full text-center text-gray-500">Aucun véhicule</div>
           ) : (
-            vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} onScreenChange={onScreenChange} />
+            vehicles.map((vehicle, index) => (
+              <motion.div
+                key={vehicle.id}
+                variants={fadeIn}
+                custom={index}
+              >
+                <VehicleCard vehicle={vehicle} onScreenChange={onScreenChange} />
+              </motion.div>
             ))
           )}
-        </div>
+        </motion.div>
       </div>
-    </div>
+
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title="Nouveau véhicule"
+        description="Ajouter un nouveau véhicule à la flotte"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité à venir : formulaire de création de véhicule</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setDialogOpen(false)}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            >
+              Annuler
+            </button>
+            <GradientButton onClick={() => setDialogOpen(false)}>
+              Créer
+            </GradientButton>
+          </div>
+        </div>
+      </Dialog>
+    </motion.div>
   );
 };
 

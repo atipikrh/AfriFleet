@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Vehicle } from '../services/vehiclesApi';
 import { Driver } from '../services/driversApi';
-import { vehiclesApi } from '../services/vehiclesApi';
-import { driversApi } from '../services/driversApi';
+import { useVehicles, useDrivers } from '../hooks';
 
 interface AppContextType {
   vehicles: Vehicle[];
@@ -16,39 +16,22 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: vehicles = [], isLoading: vehiclesLoading, error: vehiclesError } = useVehicles();
+  const { data: drivers = [], isLoading: driversLoading, error: driversError } = useDrivers();
+  const queryClient = useQueryClient();
+
+  const loading = vehiclesLoading || driversLoading;
+  const error = vehiclesError ? (vehiclesError instanceof Error ? vehiclesError.message : 'Erreur inconnue') 
+    : driversError ? (driversError instanceof Error ? driversError.message : 'Erreur inconnue')
+    : null;
 
   const refreshVehicles = async () => {
-    try {
-      const data = await vehiclesApi.getAll();
-      setVehicles(data);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement des véhicules');
-    }
+    await queryClient.invalidateQueries({ queryKey: ['vehicles'] });
   };
 
   const refreshDrivers = async () => {
-    try {
-      const data = await driversApi.getAll();
-      setDrivers(data);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement des conducteurs');
-    }
+    await queryClient.invalidateQueries({ queryKey: ['drivers'] });
   };
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      await Promise.all([refreshVehicles(), refreshDrivers()]);
-      setLoading(false);
-    };
-    loadData();
-  }, []);
 
   return (
     <AppContext.Provider

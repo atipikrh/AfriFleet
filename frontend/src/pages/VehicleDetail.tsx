@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { GlassCard } from '../components/ui/GlassCard';
 import { GradientButton } from '../components/ui/GradientButton';
 import { StatusDot } from '../components/ui/StatusDot';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/radix/Tabs';
+import { useVehicle } from '../hooks/useVehicles';
 import { vehiclesApi, VehicleWithRelations } from '../services/vehiclesApi';
 
 interface VehicleDetailProps {
@@ -9,32 +12,10 @@ interface VehicleDetailProps {
   vehicleId?: string;
 }
 
-export const VehicleDetail: React.FC<VehicleDetailProps> = ({ onBack, vehicleId }) => {
-  const [vehicle, setVehicle] = useState<VehicleWithRelations | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadVehicle = async () => {
-      try {
-        setLoading(true);
-        if (vehicleId) {
-          const data = await vehiclesApi.getById(vehicleId, true);
-          setVehicle(data as VehicleWithRelations);
-        } else {
-          // Charger le premier véhicule si aucun ID n'est fourni
-          const vehicles = await vehiclesApi.getAll(true);
-          if (vehicles.length > 0) {
-            setVehicle(vehicles[0] as VehicleWithRelations);
-          }
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement du véhicule:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadVehicle();
-  }, [vehicleId]);
+export const VehicleDetail: React.FC<VehicleDetailProps> = ({ onBack, vehicleId: propVehicleId }) => {
+  const { id: paramId } = useParams<{ id: string }>();
+  const vehicleId = propVehicleId || paramId || '';
+  const { data: vehicle, isLoading: loading } = useVehicle(vehicleId, true);
 
   if (loading) {
     return (
@@ -44,13 +25,15 @@ export const VehicleDetail: React.FC<VehicleDetailProps> = ({ onBack, vehicleId 
     );
   }
 
-  if (!vehicle) {
+  if (!vehicle || !('marque' in vehicle)) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="text-center text-gray-500">Véhicule non trouvé</div>
       </div>
     );
   }
+
+  const vehicleData = vehicle as VehicleWithRelations;
 
   const getStatusColor = (statut: string) => {
     switch (statut) {
@@ -86,18 +69,18 @@ export const VehicleDetail: React.FC<VehicleDetailProps> = ({ onBack, vehicleId 
         <div className="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6 gap-4">
           <div className="flex-1">
             <div className="flex items-center mb-2">
-              <StatusDot color={getStatusColor(vehicle.statut) as any} />
+              <StatusDot color={getStatusColor(vehicleData.statut) as any} />
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
-                {vehicle.marque} {vehicle.modele}
+                {vehicleData.marque} {vehicleData.modele}
               </h2>
             </div>
             <div className="text-gray-600 text-sm sm:text-base">
-              #{vehicle.id} • {vehicle.annee} • {vehicle.type_carburant}
+              #{vehicleData.id} • {vehicleData.annee} • {vehicleData.type_carburant}
             </div>
           </div>
           <div className="text-right">
             <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              {vehicle.kilometrage?.toLocaleString('fr-FR') || 'N/A'} km
+              {vehicleData.kilometrage?.toLocaleString('fr-FR') || 'N/A'} km
             </div>
             <div className="text-xs sm:text-sm text-gray-500">Kilométrage</div>
           </div>
@@ -105,53 +88,68 @@ export const VehicleDetail: React.FC<VehicleDetailProps> = ({ onBack, vehicleId 
 
         <img
           src="https://picsum.photos/400/200?random=5"
-          alt={`${vehicle.marque} ${vehicle.modele}`}
+          alt={`${vehicleData.marque} ${vehicleData.modele}`}
           className="w-full h-48 sm:h-64 object-cover rounded-lg mb-4 sm:mb-6 vehicle-image"
           loading="lazy"
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
-            <div className="text-xs sm:text-sm text-gray-500">Conducteur</div>
-            <div className="font-medium text-sm sm:text-base">
-              {vehicle.conducteur_actif?.nom || 'Aucun conducteur assigné'}
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
-            <div className="text-xs sm:text-sm text-gray-500">Dernier contrôle</div>
-            <div className="font-medium text-sm sm:text-base">
-              {formatDate(vehicle.date_dernier_controle)}
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
-            <div className="text-xs sm:text-sm text-gray-500">Statut</div>
-            <div className="font-medium text-sm sm:text-base">{vehicle.statut}</div>
-          </div>
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
-            <div className="text-xs sm:text-sm text-gray-500">Conformité</div>
-            <div className="font-medium text-sm sm:text-base">{vehicle.score_conformite}</div>
-          </div>
-        </div>
+        <Tabs defaultValue="info" className="w-full">
+          <TabsList>
+            <TabsTrigger value="info">Informations</TabsTrigger>
+            <TabsTrigger value="assignments">Affectations</TabsTrigger>
+            <TabsTrigger value="history">Historique</TabsTrigger>
+          </TabsList>
 
-        {vehicle.assignments && vehicle.assignments.length > 0 && (
-          <div className="mb-4 sm:mb-6">
-            <h3 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Affectations actives</h3>
-            <div className="space-y-2">
-              {vehicle.assignments
-                .filter(a => a.statut === 'ACTIF')
-                .map((assignment) => (
-                  <div key={assignment.id} className="bg-gray-50 p-3 rounded-lg text-sm">
-                    <div className="font-medium">
-                      {assignment.driver?.nom || 'Conducteur inconnu'}
-                    </div>
-                    <div className="text-gray-600 text-xs">
-                      Depuis le {formatDate(assignment.date_debut)}
-                    </div>
-                  </div>
-                ))}
+          <TabsContent value="info" className="mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
+                <div className="text-xs sm:text-sm text-gray-500">Conducteur</div>
+                <div className="font-medium text-sm sm:text-base">
+                  {vehicleData.conducteur_actif?.nom || 'Aucun conducteur assigné'}
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
+                <div className="text-xs sm:text-sm text-gray-500">Dernier contrôle</div>
+                <div className="font-medium text-sm sm:text-base">
+                  {formatDate(vehicleData.date_dernier_controle)}
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
+                <div className="text-xs sm:text-sm text-gray-500">Statut</div>
+                <div className="font-medium text-sm sm:text-base">{vehicleData.statut}</div>
+              </div>
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-lg">
+                <div className="text-xs sm:text-sm text-gray-500">Conformité</div>
+                <div className="font-medium text-sm sm:text-base">{vehicleData.score_conformite}</div>
+              </div>
             </div>
-          </div>
-        )}
+          </TabsContent>
+
+          <TabsContent value="assignments" className="mt-4">
+            {vehicleData.assignments && vehicleData.assignments.length > 0 ? (
+              <div className="space-y-2">
+                {vehicleData.assignments
+                  .filter(a => a.statut === 'ACTIF')
+                  .map((assignment) => (
+                    <div key={assignment.id} className="bg-gray-50 p-3 rounded-lg text-sm">
+                      <div className="font-medium">
+                        {assignment.driver?.nom || 'Conducteur inconnu'}
+                      </div>
+                      <div className="text-gray-600 text-xs">
+                        Depuis le {formatDate(assignment.date_debut)}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 py-8">Aucune affectation active</div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="history" className="mt-4">
+            <div className="text-center text-gray-500 py-8">Historique à venir</div>
+          </TabsContent>
+        </Tabs>
 
         <div className="space-y-3 sm:space-y-4">
           <GradientButton className="w-full">

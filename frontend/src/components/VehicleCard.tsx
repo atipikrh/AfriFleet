@@ -1,13 +1,25 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Vehicle, VehicleWithRelations } from '../services/vehiclesApi';
 import { StatusDot } from './ui/StatusDot';
+import { cardHover } from '../lib/animations';
 
 interface VehicleCardProps {
   vehicle: Vehicle | VehicleWithRelations;
-  onScreenChange: (screen: string) => void;
+  onScreenChange?: (screen: string) => void;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onScreenChange }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onScreenChange) {
+      onScreenChange(`vehicle-detail:${vehicle.id}`);
+    } else {
+      navigate(`/vehicles/${vehicle.id}`);
+    }
+  };
   const getStatusColor = (statut: Vehicle['statut']) => {
     switch (statut) {
       case 'ACTIF':
@@ -41,7 +53,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onScreenChang
   const statusText = getStatusText(vehicle.statut);
 
   return (
-    <div className="vehicle-card rounded-xl sm:rounded-2xl p-4 sm:p-5">
+    <motion.div
+      className="vehicle-card rounded-xl sm:rounded-2xl p-4 sm:p-5"
+      whileHover={cardHover}
+      transition={{ duration: 0.2 }}
+    >
       <div className="flex justify-between items-start mb-3 sm:mb-4">
         <div className="flex-1">
           <div className="flex items-center mb-2">
@@ -92,12 +108,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onScreenChang
         </div>
         <button
           className="text-indigo-600 font-medium hover:text-indigo-700 transition-colors mt-2 sm:mt-0 text-left sm:text-right"
-          onClick={() => onScreenChange(`vehicle-detail:${vehicle.id}`)}
+          onClick={handleClick}
         >
           Détails <i className="fas fa-chevron-right ml-1"></i>
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
