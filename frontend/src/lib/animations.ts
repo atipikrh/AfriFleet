@@ -1,8 +1,8 @@
 import { Variants } from 'framer-motion';
 
-export const fadeIn: Variants = {
-  hidden: { opacity: 0, y: -10 },
-  visible: { opacity: 1, y: 0 },
+export const fadeIn = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
 };
 
 export const slideIn: Variants = {

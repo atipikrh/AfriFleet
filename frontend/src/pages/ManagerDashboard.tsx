@@ -36,14 +36,14 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
   }, [vehicles]);
   return (
     <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
+      initial={fadeIn.initial}
+      animate={fadeIn.animate}
     >
       <div className="mb-6 sm:mb-8">
         <motion.h2
           className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6"
-          variants={fadeIn}
+          initial={fadeIn.initial}
+          animate={fadeIn.animate}
         >
           Tableau de bord
         </motion.h2>
@@ -121,7 +121,8 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onScreenChan
             vehicles.map((vehicle, index) => (
               <motion.div
                 key={vehicle.id}
-                variants={fadeIn}
+                initial={fadeIn.initial}
+                animate={fadeIn.animate}
                 custom={index}
               >
                 <VehicleCard vehicle={vehicle} onScreenChange={onScreenChange} />
