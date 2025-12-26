@@ -1,26 +1,18 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { PWAUpdatePrompt } from '../PWAUpdatePrompt';
 import { pageTransition } from '@/lib/animations';
+import { useAuth } from '@/app/AuthContext';
 
 export const AppLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentRole, setCurrentRole] = useState<'manager' | 'driver' | 'workshop'>('manager');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const auth = localStorage.getItem('afrifleet_auth') || sessionStorage.getItem('afrifleet_auth');
-    if (auth) {
-      setIsLoggedIn(true);
-    } else if (location.pathname !== '/login') {
-      navigate('/login');
-    }
-  }, [location.pathname, navigate]);
+  const { user } = useAuth();
+  const [currentRole, setCurrentRole] = useState<'manager' | 'driver' | 'workshop'>(user?.role || 'manager');
 
   const getCurrentScreen = () => {
     const path = location.pathname;
@@ -55,12 +47,9 @@ export const AppLayout = () => {
     }
   };
 
-  if (!isLoggedIn && location.pathname !== '/login') {
-    return null;
-  }
-
-  if (location.pathname === '/login') {
-    return <Outlet />;
+  // Mettre à jour le rôle si l'utilisateur change
+  if (user && user.role !== currentRole) {
+    setCurrentRole(user.role);
   }
 
   return (

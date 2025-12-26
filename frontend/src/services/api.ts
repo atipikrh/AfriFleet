@@ -76,8 +76,11 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
         localStorage.removeItem('afrifleet_remember');
         sessionStorage.removeItem('afrifleet_auth');
         
-        if (window.location.pathname !== '/') {
-          window.location.href = '/';
+        // Déclencher un événement pour notifier AuthContext
+        window.dispatchEvent(new CustomEvent('afrifleet:logout'));
+        
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
         }
       }
 
